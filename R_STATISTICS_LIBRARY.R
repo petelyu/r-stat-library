@@ -7,8 +7,7 @@
 #         (plyu2400@gmail.com)        #
 #                                     #
 # ----------------------------------- #
-# Version 1.4                         #
-# Last Updated: 05/09/2019            #
+# Last Updated: 05/13/2019            #
 # =================================== #
 # =================================== #
 
@@ -115,6 +114,13 @@ library(faraway)
                         }
     # STEP 6: Stop/Close clusters
       stopCluster(cl)
+      
+##### Part E: Miscellaneous #####
+  # Identify Duplicates
+    # For specific variable in dataset
+      dat$dup <- duplicated(dat[,c("var")])
+    # Of entire observations/rows
+      dat$dup <- duplicated(dat)
 
 #*******************************************************************************************************#
 
