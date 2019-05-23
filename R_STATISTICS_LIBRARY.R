@@ -109,6 +109,7 @@ library(faraway)
         model <- lm(formulas[[i]], data=dat)
         cluster_vcov <- vcovHC(model, type="HC1", cluster="clustervar")
         list(model,cluster_vcov)
+                          }
       # Example 2: Parallel Prints
       #   Prints different sets of models together using stargazer package.
       combos_models <- list(list(all_fits[[1]][[1]], all_fits[[2]][[1]], all_fits[[3]][[1]]),
