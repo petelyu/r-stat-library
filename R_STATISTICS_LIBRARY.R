@@ -38,6 +38,19 @@ library(faraway)
 #*******************************************************************************************************#
 ##### SECTION I: MANAGEMENT #####
 ##### Part A: Reading Data #####
+  # Read in different data types
+    # SAS data ("read_sas" imports data as tables)
+      library(haven)
+      dat <- as.data.frame(read_sas("dat.sas7bdat"))
+    # Stata data
+      # Note: 'foreign' package can't read beyond Stata 12 data
+      library(foreign)
+      dat <- read.dta("dat.dta")
+      library(haven)
+      dat <- as.data.frame(read_dta("dat.dta"))
+    # CSV data
+      dat <- read.csv(file="dat.csv", header=T, sep=",")
+
   # Read in series of data files, all with same prefix, as a list object
     lapply(Sys.glob("data*.csv"),read.csv)
 
