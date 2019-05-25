@@ -13,14 +13,6 @@
 
 
 #*******************************************************************************************************#
-##### What is the R STATISTICS LIBRARY? ######
-# The R STATISTICS LIBRARY is a collection of useful R code for data management, exploration, modeling, 
-# evaluation, and reporting based on code written directly by the author or adapted from courses at 
-# Harvard University and code from classmates in the Harvard University Health Policy PhD Program.
-#*******************************************************************************************************#
-
-
-#*******************************************************************************************************#
 ###### Table of Contents ######
 # The library consists of the following sections, organized by purpose:
 #   (I)   MANAGEMENT
