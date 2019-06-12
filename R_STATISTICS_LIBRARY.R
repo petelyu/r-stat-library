@@ -13,14 +13,6 @@
 
 
 #*******************************************************************************************************#
-##### What is the R STATISTICS LIBRARY? ######
-# The R STATISTICS LIBRARY is a collection of useful R code for data management, exploration, modeling, 
-# evaluation, and reporting based on code written directly by the author or adapted from courses at 
-# Harvard University and code from classmates in the Harvard University Health Policy PhD Program.
-#*******************************************************************************************************#
-
-
-#*******************************************************************************************************#
 ###### Table of Contents ######
 # The library consists of the following sections, organized by purpose:
 #   (I)   MANAGEMENT
@@ -102,7 +94,7 @@ library(faraway)
       #   Fits different models with different formulas (contained in list and defined
       #   prior to makeCluster() and outputs a nested list. E.g. all_fits[[1]][[1]] contains the estimates
       #   from Model 1 and all_fits[[1]][[2]] contains the robust var-cov matrix of Model 1.
-      all_fits <- foreach(i:n_models,
+      all_fits <- foreach(i=1:n_models,
                           .packages = c("sandwich","lmtest","foreach","doParallel"),
                           .combine = list,
                           .multicombine = T) %dopar% {
@@ -129,7 +121,24 @@ library(faraway)
     # STEP 6: Stop/Close clusters
       stopCluster(cl)
       
-##### Part E: Miscellaneous #####
+##### Part E: Saving & Exporting Data #####
+  # Saving R object
+    # Saving in Rdata form (simplest)
+      save(obj,file="Object.Rdata")
+      load("Object.Rdata")
+    # Saving in RDS form (allows to be read in with different name)
+      saveRDS(obj,file="Object.rds")
+      objnew <- readRDS("Object.rds")
+      
+  # Saving R workspace
+    save.image(file="Workspace.Rdata")
+    
+  # Exporting dataframe as CSV
+    write.csv(dat,file="dat.csv",row.names=F)
+      # To replace missing (NA) with blanks
+        write.csv(dat,file="dat.csv",row.names=F,na="")
+      
+##### Part F: Miscellaneous #####
   # Identify Duplicates
     # For specific variable in dataset
       dat$dup <- duplicated(dat[,c("var")])
