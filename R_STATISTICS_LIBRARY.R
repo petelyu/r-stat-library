@@ -317,7 +317,15 @@ library(faraway)
                        SD=sapply(dat,mean))
     
   # Means by Categorical Variable
+    # Using Base R (slower)
       aggregate(data_variables,by=list(dat$by_variable),mean)
+    # Using data.table (much faster)
+      # A note about the data.table() syntax: DTs take three arguments that resemble SQL language:
+      #   i : "where"
+      #   j : "select" or "update"
+      #   by: "group by"
+      library(data.table)
+      dat[,list(mean_of_var=mean(data_variables)),by=list(by_variable)]
       
   # Frequency Table with Proportions and Cumulative Proportions
       proc.freq <- function(x){ 
