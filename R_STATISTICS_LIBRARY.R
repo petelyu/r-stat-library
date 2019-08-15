@@ -1148,6 +1148,14 @@ library(faraway)
           # Step 2: Copy HTML Code into new, temporary R HTML script (place between <html> and </html>)
           # Step 3: Knit
           # Step 4: Open Rhtml file from MS word to copy table
+            
+            
+##### Part C: R Markdown #####
+      # Setup Chunk
+        # Set different working directory for entire script
+          knitr::opts_knit$set(root.dir=normalizePath(""))
+        # Set warnings off
+          knitr::opts_chunk$set(warning = FALSE)
           
 #*******************************************************************************************************#
     
