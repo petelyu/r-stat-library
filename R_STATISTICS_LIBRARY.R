@@ -7,7 +7,7 @@
 #         (plyu2400@gmail.com)        #
 #                                     #
 # ----------------------------------- #
-# Last Updated: 05/13/2019            #
+# Last Updated: 07/31/2019            #
 # =================================== #
 # =================================== #
 
@@ -381,6 +381,50 @@ library(faraway)
       library(arm)
       df <- as.data.frame(binned.resids(x,y,20)$binned)
       plot(df$xbar,df$ybar)
+      
+  # GIF - Animated line graph
+    # Using gganimate, notes:
+        # gganimate is an extension to ggplot2
+        # requires rendering package(s): gifski, magick, png
+      library(ggplot2)
+      library(gganimate)
+      library(magick)
+      library(gifski)
+      library(png)
+      p <- ggplot(dat, aes(x=x_var, y=y_var, group=cohort)) +
+            geom_line() +
+            #This geom_segment statement connects datapoint to group label
+            geom_segment(aes(xend=7.2, yend=n_aco), linetype=2, colour="grey") +
+            geom_point(size=2) +
+            #This geom_text statement adjusts group label
+            geom_text(aes(x=7.3, label=cohort), hjust=0) +
+            #Set x-axis interval
+            scale_x_continuous(breaks=seq(1,7,1)) +
+            #Animate by tracking x-y coordinates by group over years
+            transition_reveal(year) +
+            #Establsh bounds of graph space
+            coord_cartesian(clip="off", xlim=c(1,7.1), ylim=c(48,225)) +
+            labs(title="Year is {frame_along}", 
+                 caption="This is the caption",
+                 x="X Variable", 
+                 y="Y Variable") +
+            theme_minimal() +
+            #Margins will need to be set such that labels and axis titles fall within margins
+            theme(plot.margin=margin(5.5,100,50,5.5),
+                  panel.grid.minor=element_blank(),
+                  axis.title.x=element_text(vjust=-11),
+                  plot.caption=element_text(vjust=-17),
+                  plot.title=element_text(size=22)) +
+            #This extra text manually inserts x-axis subgroup labels (i.e. if X variable has groupings)
+            annotate(geom="text",x=c(2,5,7),y=25,label=c("AP1","AP2","AP3"),colour="grey") +
+            #These extra segments help visually separate x-axis values into the subgroups labeled in annotate
+            geom_segment(aes(x=0.8,xend=3.3,y=29,yend=29),colour="grey") +
+            geom_segment(aes(x=3.7,xend=6.3,y=29,yend=29),colour="grey") +
+            geom_segment(aes(x=6.7,xend=7.3,y=29,yend=29),colour="grey")
+      #Animate
+      anim_plot <- animate(p,fps=8,end_pause=20,height=600,width=600)
+      #Save
+      anim_save("My GIF.gif")
       
 #*******************************************************************************************************#
 
