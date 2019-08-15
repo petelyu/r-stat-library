@@ -4,7 +4,6 @@
 #                                     #
 #              Peter Lyu              #
 #         (plyu@g.harvard.edu)        #
-#         (plyu2400@gmail.com)        #
 #                                     #
 # ----------------------------------- #
 # Last Updated: 08/15/2019            #
