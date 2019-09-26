@@ -6,7 +6,7 @@
 #         (plyu@g.harvard.edu)        #
 #                                     #
 # ----------------------------------- #
-# Last Updated: 08/15/2019            #
+# Last Updated: 09/26/2019            #
 # =================================== #
 # =================================== #
 
@@ -143,6 +143,10 @@ library(faraway)
       dat$dup <- duplicated(dat[,c("var")])
     # Of entire observations/rows
       dat$dup <- duplicated(dat)
+      
+  # Convert numeric to character, padded with leading zeros
+    # Use for ZIPs, CCNs, etc.
+      zip_char <- sprintf("%05d",zip_num)
 
 #*******************************************************************************************************#
 
