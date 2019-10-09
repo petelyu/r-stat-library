@@ -6,7 +6,7 @@
 #         (plyu@g.harvard.edu)        #
 #                                     #
 # ----------------------------------- #
-# Last Updated: 09/26/2019            #
+# Last Updated: 10/09/2019            #
 # =================================== #
 # =================================== #
 
@@ -350,6 +350,13 @@ library(faraway)
       
 ##### Part D: Visualizing Data #####
   # GGPLOT COLORS: http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#palettes-color-brewer
+      
+  # GGPLOT Error Bars
+      library(ggplot2)
+      ggplot(dat,aes(x=xvar,y=yvar,group=groupvar)) +
+        geom_line() +
+        geom_point() +
+        geom_errorbar(aes(ymin=yvar-2*se,ymax=yvar+2*se), width=0.2)
     
   # Overlapping Density Plots
       library(ggplot2)
