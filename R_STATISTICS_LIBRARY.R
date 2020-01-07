@@ -346,6 +346,9 @@ library(faraway)
         Table$CumProp <-  cumsum( Table$Prop ) 
         Table
       }
+      
+      # Simple version - add cumulative totals in margins
+        addmargins(table(dat$var))
     
       
 ##### Part D: Visualizing Data #####
