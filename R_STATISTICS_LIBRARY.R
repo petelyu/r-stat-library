@@ -823,6 +823,8 @@ library(faraway)
       # smaller group runs out of observations.
       # REFERENCE: https://cran.r-project.org/web/packages/MatchIt/vignettes/matchit.pdf
       library(MatchIt)
+      library(cem)
+      library(optmatch)
       # STEP 1: Match Observations
         # Exact Matching (match exactly on variables)
           matchit(formula,data=dat,method="exact")
@@ -834,11 +836,20 @@ library(faraway)
           matchit(formula,data=dat,method="nearest",distance="logit",exact=c("var1"))
         # Optimal Matching (minimizes global average absolute distance between matched pairs)
           matchit(formula,data=dat,method="optimal",ratio=2)
+            # NOTE: Calls the "optmatch" package
+            # NOTE: To combine exactMatch & fullmatch, see vignette from fullmatch() documentation, for example...
+              # To match in subgroups
+                fullmatch(pr~x1+x2,data=dat,within=exactMatch(pr~x3,data=dat))
+                fullmatch(pr~x1+x2+strata(x3),data=dat)
+              # To match on propensity scores (as estimated by binomial-logit model here)
+                fullmatch(glm(y~x1+x2,data=dat,family=binomial),data=dat,within=exactMatch(pr~x3,data=dat))
+                fullmatch(glm(y~x1+x2+strata(x3),data=dat,family=binomial),data=dat)
         # Full Matching (global version of Subclassification Matching)
           matchit(formula,data=dat,method="full")
         # Genetic matching (uses genetic search algorithm?)
           matchit(formula,data=dat,method="genetic")
         # Coarsened Exact Matching (CEM: matches based on ex ante balance objectives)
+            # NOTE: Calls the "cem" package
           matchit(formula,data=dat,method="cem")
       # STEP 2: Check Balance
         summary(matchit_object,interactions=T)
