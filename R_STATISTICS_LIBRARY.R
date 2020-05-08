@@ -6,7 +6,7 @@
 #         (plyu@g.harvard.edu)        #
 #                                     #
 # ----------------------------------- #
-# Last Updated: 10/09/2019            #
+# Last Updated: 05/08/2020            #
 # =================================== #
 # =================================== #
 
@@ -147,6 +147,12 @@ library(faraway)
   # Convert numeric to character, padded with leading zeros
     # Use for ZIPs, CCNs, etc.
       zip_char <- sprintf("%05d",zip_num)
+      
+  # Calculate weighted mean by group(s) (Note: aggregate() method will not work, need dplyr)
+    library(dplyr)
+    data %>%
+      group_by(group_var) %>%
+      summarise(wtmean_y = weighted.mean(y,weights))
 
 #*******************************************************************************************************#
 
