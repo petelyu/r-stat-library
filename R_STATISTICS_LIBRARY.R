@@ -865,6 +865,21 @@ library(faraway)
           weight = 1/pscore
         # For Comparison
           weight = 1/(1-pscore)
+          
+  # Coarsened Exact Matching
+    library(cem)
+    # Vector of cutpoints which are used to convert continuous variable into factor
+      var1_bins <- c(0,10,20)
+    # Match controls to treatment observations (all variables in dat noot included in "drop" will be matched on)
+      # Note: if cutpoints are not manually decided, cem() uses default algorithm
+      match_object <- cem(treatment="tx",
+                          data=dat,
+                          drop=c("vars_not_used_in_match"),
+                          cutpoints=list(continuous_var1=var1_bins),
+                          eval.imbalance=T,
+                          keep.all=T)
+    # Get weights
+      match_object$w
 
 ##### Part H: Instrumental Variables #####
       # 2-Stage Least Squares (2SLS)
