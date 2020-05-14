@@ -369,10 +369,13 @@ library(faraway)
     
   # Overlapping Density Plots
       library(ggplot2)
-      ggplot(dat,aes(x=propensity,fill=as.factor(treat)))+
-       geom_density(alpha=0.3)+
+      ggplot(dat,aes(x=propensity,fill=as.factor(treat),weight=wt))+
+       geom_density(alpha=0.3, adjust=1.5)+
        scale_fill_discrete(name="Treated?",breaks=c(0,1),labels=c("No","Yes"))+
        labs(x="Predicted Propensity",y="Density")
+      # Notes:
+        # adjust = adjusts kernal size relative to default
+        # weighted plots must be normalized to sum to 1 within group
     
   # Histogram (bottom) + Boxplot (top)
       hist(var,main="Title",xlab="Var",xlim=c(40,90),ylim=c(0,300))
