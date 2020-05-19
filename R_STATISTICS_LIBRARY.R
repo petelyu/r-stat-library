@@ -68,14 +68,26 @@ library(faraway)
       reshape(dat,idvar="id",varying=c(2:4),v.names="var",sep="_",direction="long")
       
 ##### Part C: Loops #####
-  # For [index] in vector of variables
+  # For Loop: [index] in vector
       for (i in c(1,2,3,4)) {
         var = i
       }
-  # For [index] in sequence
-      for (i in 1:4) {
-        var = i
-      }
+      
+  # SAS "Macro"-like loops via lapply()
+    # Example: looping over dataframes indexed by year, e.g. data2000, data2001,... (taken from Stack Overflow)
+      years <- 2000:2002
+      dataList <- lapply(years, function(x){
+        #Create name of data set as character object
+        dsname <- paste0("data",x)
+        #Call data set from character object using get() (example process here removes obs with non-missing var)
+        dat <- get(dat)[is.na(var)==0]
+        #Create year variable
+        dat$year <- x
+        #Output data set in resulting list
+        dat
+      })
+      #Append data sets
+      dat_2000_2002 <- do.call(rbind.dataList)
       
 ##### Part D: Parallel Processing #####
   # Using dopar
