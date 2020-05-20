@@ -87,7 +87,7 @@ library(faraway)
         dat
       })
       #Append data sets
-      dat_2000_2002 <- do.call(rbind.dataList)
+      dat_2000_2002 <- do.call(rbind,dataList)
       
 ##### Part D: Parallel Processing #####
   # Using dopar
