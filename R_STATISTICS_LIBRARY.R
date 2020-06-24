@@ -471,6 +471,13 @@ library(faraway)
       #Save
       anim_save("My GIF.gif")
       
+  # Page through plots in sequence
+    devAskNewPage(TRUE)
+    for (i in 1:x) print(ggplot(dat[id==i],...))
+    
+    #To return to default viewing
+    devAskNewPage(options("device.ask.default")[[1]])
+      
 #*******************************************************************************************************#
 
     
