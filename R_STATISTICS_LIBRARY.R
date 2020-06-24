@@ -6,7 +6,7 @@
 #         (plyu@g.harvard.edu)        #
 #                                     #
 # ----------------------------------- #
-# Last Updated: 05/08/2020            #
+# Last Updated: 06/24/2020            #
 # =================================== #
 # =================================== #
 
@@ -165,7 +165,10 @@ library(faraway)
     data %>%
       group_by(group_var) %>%
       summarise(wtmean_y = weighted.mean(y,weights))
-
+  
+  # Rename variables in a Data Table
+    setnames(dt, c("oldname1","oldname2"), c("newname1","newname2"))
+    
 #*******************************************************************************************************#
 
 
@@ -395,10 +398,18 @@ library(faraway)
     
   # Grouped Bar Plot
       ggplot(dat_long, aes(var_grouping,var_outcome,fill=var_category)) +
-        geom_bar(stat="identity",position="dodge") +
+        geom_bar(stat="identity",position="dodge") + 
         scale_fill_brewer(palette = "Set2") +
         xlab("X Axis") + ylab("Y Axis")
-    
+      
+      # Set width=1 to remove gaps between bars
+        ggplot(dat_long, aes(var_grouping,var_outcome,fill=var_category)) +
+          geom_bar(stat="identity",width=1)
+        
+      # Reorder bars by Y
+        ggplot(dat_long, aes(x=reorder(var_grouping,var_outcome),x=var_outcome)) +
+          geom_bar(stat="identity",width=1)
+        
   # Line Smoothers
     # Running-mean
     # Running-line (local OLS)
