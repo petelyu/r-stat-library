@@ -701,8 +701,26 @@ library(faraway)
         # Crossed Structure (ClusterVar2 not nested within ClusterVar1)
           lmer(y~var1+var2+var3+(1|ClusterVar1)+(1|ClusterVar2),data=dat)
       # Generalized Linear Mixed-Effects Model (GLMM)
-        library(lme3)
+        library(lme4)
         glmer(y~var1+var2+var3+(1|ClusterVar),data=dat,family=binomial(link="logit"))
+      # Calculate ICC (based on function written by Dustin Fife)
+        icc_fxn = function(model){
+          #### compute ICC
+          var.components = as.data.frame(VarCorr(model))$vcov
+          ICC = var.components[1]/sum(var.components)
+          
+          #### find out average cluster size
+          id.name = names(coef(model))
+          n_clusters = sum(summary(model)$ngrps)
+          n_obs = length(residuals(model))
+          average.cluster.size = n_obs/n_clusters
+          
+          #### compute design effects
+          design.effect = 1+ICC*(average.cluster.size-1)
+          
+          #### return stuff
+          list(icc=ICC, average.cluster.size=average.cluster.size,design.effect=design.effect)
+        }
           
         
 ##### Part C: Non-Parametric Models #####
