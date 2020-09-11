@@ -703,24 +703,6 @@ library(faraway)
       # Generalized Linear Mixed-Effects Model (GLMM)
         library(lme4)
         glmer(y~var1+var2+var3+(1|ClusterVar),data=dat,family=binomial(link="logit"))
-      # Calculate ICC (based on function written by Dustin Fife)
-        icc_fxn = function(model){
-          #### compute ICC
-          var.components = as.data.frame(VarCorr(model))$vcov
-          ICC = var.components[1]/sum(var.components)
-          
-          #### find out average cluster size
-          id.name = names(coef(model))
-          n_clusters = sum(summary(model)$ngrps)
-          n_obs = length(residuals(model))
-          average.cluster.size = n_obs/n_clusters
-          
-          #### compute design effects
-          design.effect = 1+ICC*(average.cluster.size-1)
-          
-          #### return stuff
-          list(icc=ICC, average.cluster.size=average.cluster.size,design.effect=design.effect)
-        }
           
         
 ##### Part C: Non-Parametric Models #####
@@ -850,6 +832,41 @@ library(faraway)
       # IMPORTANT: Data must by sorted by id and time variable
         library(geepack)
         geeglm(formula,data=dat,family=binomial,id="id_var",corstr="ar1")
+        
+  # ANOVA ICC (see 1999 Ridout et al.)
+    # Note: MSB and MSW calculated manually here are equivalent to those produced in aov()
+    anovaicc_fxn = function(dt,quoted_group_var,quoted_y_var) {
+      dt$group <- dt[,..quoted_group_var]
+      dt$y <- dt[,..quoted_y_var]
+      k <- length(unique(dt$group))
+      N <- nrow(dt)
+      grp <- data.table(dt %>% group_by(group) %>% summarise(yi=sum(y),ni=n()))
+      n0 <- (1/(k-1)) * (N - (sum(grp$ni^2))/N)
+      MSB <- (1/(k-1)) * (sum(grp$yi^2/grp$ni) - (1/N)*(sum(grp$yi)^2))
+      MSW <- (1/(N-k)) * (sum(grp$yi) - sum((grp$yi^2)/grp$ni))
+      rho <- (MSB - MSW) / (MSB + (n0-1)*MSW)
+      rho
+    }
+    
+  # Random Effects ICC (based on function written by Dustin Fife)
+    # Note: "model" should be output from lmer()
+    icc_fxn = function(model){
+      #### compute ICC
+      var.components = as.data.frame(VarCorr(model))$vcov
+      ICC = var.components[1]/sum(var.components)
+      
+      #### find out average cluster size
+      id.name = names(coef(model))
+      n_clusters = sum(summary(model)$ngrps)
+      n_obs = length(residuals(model))
+      average.cluster.size = n_obs/n_clusters
+      
+      #### compute design effects
+      design.effect = 1+ICC*(average.cluster.size-1)
+      
+      #### return stuff
+      list(icc=ICC, average.cluster.size=average.cluster.size,design.effect=design.effect)
+    }
       
 ##### Part G: Matching & IPW #####
   # CAUTION: Standard errors from estimating on matched/weighted data do not take into account the
