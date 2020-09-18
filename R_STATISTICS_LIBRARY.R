@@ -169,6 +169,9 @@ library(faraway)
   # Rename variables in a Data Table
     setnames(dt, c("oldname1","oldname2"), c("newname1","newname2"))
     
+  # Detach/Unload package
+    detach("package:vegan", unload=TRUE)
+    
 #*******************************************************************************************************#
 
 
@@ -360,7 +363,7 @@ library(faraway)
       library(data.table)
       dat[,list(mean_of_var=mean(data_variables)),by=list(by_variable)]
       
-  # Frequency Table with Proportions and Cumulative Proportions
+  # Frequency Tables
       proc.freq <- function(x){ 
         Table <- data.frame( table(x) ) 
         Table$Prop <- prop.table( Table$Freq ) 
@@ -370,6 +373,12 @@ library(faraway)
       
       # Simple version - add cumulative totals in margins
         addmargins(table(dat$var))
+        
+      # Calculate proportions (row or column)
+        prop.table(table(dat$var))
+        
+      # Calculate weighted proportions
+        prop.table(with(dat,tapply(weights,list(row_var,col_var),sum)),2)
     
       
 ##### Part D: Visualizing Data #####
@@ -496,6 +505,9 @@ library(faraway)
       chisq.test(table(dat$Y,dat$X))
     # Check expected counts (if any cells <5, use Fisher's exact test)
       chisq.test(table(dat$Y,dat$X))$expected
+    # Weighted Chi-square test
+      library(weights)
+      with(dat,wtd.chi.sq(var1,var2,weight=weights))
       
   # Fisher's Exact Test
     # Test
