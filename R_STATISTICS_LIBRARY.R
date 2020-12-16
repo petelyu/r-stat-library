@@ -1318,6 +1318,16 @@ library(faraway)
           # Step 3: Knit
           # Step 4: Open Rhtml file from MS word to copy table
             
+      # Extract specific covariances from a variance-covariance matrix
+        # NOTE: requires variable names as column names
+          extract_cov_fxn <- function(vcovmatrix,var1,var2) {
+            names <- rownames(vcovmatrix)
+            vcovdt <- data.table(vcovmatrix)
+            names_nosymb <- gsub("[():]", "", names)
+            var1_nosymb <- gsub("[():]", "", var1)
+            cov <- vcovdt[grepl(paste0("^",var1_nosymb,"$"),names_nosymb,fixed=F),..var2]
+            cov
+          }
             
 ##### Part C: R Markdown #####
       # Setup Chunk
