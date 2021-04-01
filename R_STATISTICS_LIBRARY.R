@@ -6,7 +6,7 @@
 #         (plyu@g.harvard.edu)        #
 #                                     #
 # ----------------------------------- #
-# Last Updated: 06/24/2020            #
+# Last Updated: 04/01/2021            #
 # =================================== #
 # =================================== #
 
@@ -383,7 +383,9 @@ library(faraway)
       
 ##### Part D: Visualizing Data #####
   # GGPLOT COLORS: http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/#palettes-color-brewer
-      
+      # Discrete rainbow color gradient (green to purple)
+        palette_rainbow <- c("#4eb400","#a0ce00","#f7e400","#f8b600","#f88700","#f85900","#e82c0e","#d8001d","#ff0099","#b54cff","#998cff")
+        
   # GGPLOT Error Bars
       library(ggplot2)
       ggplot(dat,aes(x=xvar,y=yvar,group=groupvar)) +
@@ -1335,6 +1337,15 @@ library(faraway)
           knitr::opts_knit$set(root.dir=normalizePath(""))
         # Set warnings off
           knitr::opts_chunk$set(warning = FALSE)
+          
+##### Part D: Plot Arrangement #####
+      # Simple arrangement
+        library(gridExtra)
+        grid.arrange(g1,g2,g3,g4,nrow=2)
+      
+      # Arrange with common legend
+        library(ggpubr)
+        ggarrange(g1,g2,g3,g4,nrow=2,ncol=2,common.legend=T,legend="bottom")
           
 #*******************************************************************************************************#
     
