@@ -3,10 +3,9 @@
 #         R STATISTICS LIBRARY        #
 #                                     #
 #              Peter Lyu              #
-#         (plyu@g.harvard.edu)        #
 #                                     #
 # ----------------------------------- #
-# Last Updated: 04/01/2021            #
+# Last Updated: 09/02/2021            #
 # =================================== #
 # =================================== #
 
@@ -703,17 +702,26 @@ library(faraway)
   # Multilevel/Hierarchical Models
       # Linear Mixed-Effects Model (LMM)
         library(lme4)
-        # Varying Intercept
-          lmer(y~var1+var2+var3+(1|ClusterVar),data=dat)
-        # Varying Slope
-          lmer(y~var1+var2+var3+(var4|ClusterVar),data=dat)
-        # Varying Intercept & Slope
-          lmer(y~var1+var2+var3+(1+var4|ClusterVar),data=dat)
-        # Nested Structure (ClusterVar2 nested within ClusterVar1)
-          lmer(y~var1+var2+var3+(1|ClusterVar1/ClusterVar2),data=dat)
-          lmer(y~var1+var2+var3+(1|ClusterVar1)+(1|ClusterVar2:ClusterVar2),data=dat)
-        # Crossed Structure (ClusterVar2 not nested within ClusterVar1)
-          lmer(y~var1+var2+var3+(1|ClusterVar1)+(1|ClusterVar2),data=dat)
+        # Examples...
+          # Varying Intercept
+            lmer(y~var1+var2+var3+(1|ClusterVar),data=dat)
+          # Varying Slope
+            lmer(y~var1+var2+var3+(var4|ClusterVar),data=dat)
+          # Varying Intercept & Slope
+            lmer(y~var1+var2+var3+(1+var4|ClusterVar),data=dat)
+          # Nested Structure (ClusterVar2 nested within ClusterVar1)
+            lmer(y~var1+var2+var3+(1|ClusterVar1/ClusterVar2),data=dat)
+            lmer(y~var1+var2+var3+(1|ClusterVar1)+(1|ClusterVar2:ClusterVar2),data=dat)
+          # Crossed Structure (ClusterVar2 not nested within ClusterVar1)
+            lmer(y~var1+var2+var3+(1|ClusterVar1)+(1|ClusterVar2),data=dat)
+        # Extract group-specific slope/intercept random effect estimates (assuming random effects at group level)
+          subject_re_est <- ranef(model)[[1]]
+        # Extract intercept-slope vcov matrix (used to get variance components across slope variable space)
+          library(Matrix)
+          V <- bdiag(VarCorr(model)) #variance-covariance matrix
+          Z <- c(rep(1,10),seq(-1,1,length=10))
+          diag(Z %*% V %*% t(Z)) #variance explained by intercept + slope random effects at different values of slope covariate
+          
       # Generalized Linear Mixed-Effects Model (GLMM)
         library(lme4)
         glmer(y~var1+var2+var3+(1|ClusterVar),data=dat,family=binomial(link="logit"))
