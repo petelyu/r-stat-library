@@ -52,6 +52,10 @@ library(faraway)
 
   # Determine class of all variables of a dataframe
     lapply(dat,class)
+    
+  # A note about copying data.tables
+    dt_alias <- dt #executes a "shallow" copy, both dt_alias and dt will refer to same object
+    dt_realcopy <- copy(dt) #executes a "deep" copy, changes made to dt_realcopy do not affect dt
 
 ##### Part B: Transposing Data #####
   # Long-to-Wide
