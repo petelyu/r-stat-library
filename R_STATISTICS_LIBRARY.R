@@ -5,7 +5,7 @@
 #              Peter Lyu              #
 #                                     #
 # ----------------------------------- #
-# Last Updated: 09/02/2021            #
+# Last Updated: 09/24/2021            #
 # =================================== #
 # =================================== #
 
@@ -1333,7 +1333,7 @@ library(faraway)
           # Step 4: Open Rhtml file from MS word to copy table
             
       # Extract specific covariances from a variance-covariance matrix
-        # NOTE: requires variable names as column names
+        # NOTE: requires variable names as a vector of characters
           extract_cov_fxn <- function(vcovmatrix,var1,var2) {
             names <- rownames(vcovmatrix)
             vcovdt <- data.table(vcovmatrix)
@@ -1341,6 +1341,25 @@ library(faraway)
             var1_nosymb <- gsub("[():]", "", var1)
             cov <- vcovdt[grepl(paste0("^",var1_nosymb,"$"),names_nosymb,fixed=F),..var2]
             cov
+          }
+          
+      # Extract mean effects for a continuous variable interacted with each level of a factor variable
+        # NOTE: requires variable names as characters
+          extract_factor_eff <- function(model,var1_char,var2_char) {
+            coef <- summary(model)$coef
+            vcovmatrix <- vcov(model)
+            model_names_nosymb <- gsub("[():]", "",rownames(coef))
+            est <- c(coef[grepl(paste0("^",var1_char,"$"),model_names_nosymb,fixed=F),"Estimate"],
+                     coef[grepl(paste0("^",var1_char,"$"),model_names_nosymb,fixed=F),"Estimate"] + 
+                       coef[grepl(paste0(var1_char,var2_char),model_names_nosymb,fixed=T),"Estimate"])
+            reflvl_var <- (coef[grepl(paste0("^",var1_char,"$"),model_names_nosymb,fixed=F),"Std. Error"])^2
+            othlvl_var <- reflvl_var + (coef[grepl(paste0(var1_char,var2_char),model_names_nosymb,fixed=T),"Std. Error"])^2 +
+              2 * vcovmatrix[grepl(paste0("^",var1_char,"$"),model_names_nosymb,fixed=F),grepl(paste0(var1_char,var2_char),model_names_nosymb,fixed=T)]
+            var <- c(reflvl_var,othlvl_var)
+            out <- cbind.data.frame(est,se=sqrt(var))
+            out$level <- unlist(model$xlevels)
+            rownames(out) <- NULL
+            out
           }
             
 ##### Part C: R Markdown #####
