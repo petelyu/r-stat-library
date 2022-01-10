@@ -582,6 +582,15 @@ library(faraway)
       # Fitting model with robust variance estimation
         coeftest(model,vcov=vcovHC(model,type="HC0"))
         
+    # Cluster-Robust Estimation
+      library(estimatr)
+      lm_robust(y ~ x + z,
+                data = dat,
+                weights = w,
+                fixed_effects = ~ factorx,
+                clusters = groupvar,
+                se_type = "CR0")
+        
     # Step-wise Model Selection (for variable selection)
       step(initialmodel,scope=list(lower=formula,upper=formula),direction="forward")
   
