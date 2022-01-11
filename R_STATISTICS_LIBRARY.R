@@ -583,6 +583,7 @@ library(faraway)
         coeftest(model,vcov=vcovHC(model,type="HC0"))
         
     # Cluster-Robust Estimation
+      # NOTE: allows for higher dimensional FEs via absorption in "fixed_effects" argument
       library(estimatr)
       lm_robust(y ~ x + z,
                 data = dat,
@@ -590,6 +591,16 @@ library(faraway)
                 fixed_effects = ~ factorx,
                 clusters = groupvar,
                 se_type = "CR0")
+      
+    # Two-Way Cluster Estimation
+      # Note: allows for higher dimensional FEs via absorption following pipe in formula argument
+      # For basic introduction: https://cran.r-project.org/web/packages/fixest/vignettes/fixest_walkthrough.html
+      # For more on replicating SEs from other sources: https://cran.r-project.org/web/packages/fixest/vignettes/standard_errors.html
+      library(fixest)
+      feols(y ~ x + z | factorx,
+            data = dat,
+            weights = ~ w,
+            cluster ~ groupvar1 + groupvar2)
         
     # Step-wise Model Selection (for variable selection)
       step(initialmodel,scope=list(lower=formula,upper=formula),direction="forward")
