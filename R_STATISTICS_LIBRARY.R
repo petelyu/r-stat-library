@@ -1365,16 +1365,16 @@ library(faraway)
           
       # Extract mean effects for a continuous variable interacted with each level of a factor variable
         # NOTE: requires variable names as characters
-          extract_factor_eff <- function(model,var1_char,var2_char) {
+          extract_factor_eff <- function(model,contvar1_char,catvar2_char) {
             coef <- summary(model)$coef
             vcovmatrix <- vcov(model)
             model_names_nosymb <- gsub("[():]", "",rownames(coef))
-            est <- c(coef[grepl(paste0("^",var1_char,"$"),model_names_nosymb,fixed=F),"Estimate"],
-                     coef[grepl(paste0("^",var1_char,"$"),model_names_nosymb,fixed=F),"Estimate"] + 
-                       coef[grepl(paste0(var1_char,var2_char),model_names_nosymb,fixed=T),"Estimate"])
-            reflvl_var <- (coef[grepl(paste0("^",var1_char,"$"),model_names_nosymb,fixed=F),"Std. Error"])^2
-            othlvl_var <- reflvl_var + (coef[grepl(paste0(var1_char,var2_char),model_names_nosymb,fixed=T),"Std. Error"])^2 +
-              2 * vcovmatrix[grepl(paste0("^",var1_char,"$"),model_names_nosymb,fixed=F),grepl(paste0(var1_char,var2_char),model_names_nosymb,fixed=T)]
+            est <- c(coef[grepl(paste0("^",contvar1_char,"$"),model_names_nosymb,fixed=F),"Estimate"],
+                     coef[grepl(paste0("^",contvar1_char,"$"),model_names_nosymb,fixed=F),"Estimate"] + 
+                       coef[grepl(paste0(contvar1_char,catvar2_char),model_names_nosymb,fixed=T),"Estimate"])
+            reflvl_var <- (coef[grepl(paste0("^",contvar1_char,"$"),model_names_nosymb,fixed=F),"Std. Error"])^2
+            othlvl_var <- reflvl_var + (coef[grepl(paste0(contvar1_char,catvar2_char),model_names_nosymb,fixed=T),"Std. Error"])^2 +
+              2 * vcovmatrix[grepl(paste0("^",contvar1_char,"$"),model_names_nosymb,fixed=F),grepl(paste0(contvar1_char,catvar2_char),model_names_nosymb,fixed=T)]
             var <- c(reflvl_var,othlvl_var)
             out <- cbind.data.frame(est,se=sqrt(var))
             out$level <- unlist(model$xlevels)
