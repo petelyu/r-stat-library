@@ -1371,10 +1371,10 @@ library(faraway)
             model_names_nosymb <- gsub("[():]", "",rownames(coef))
             est <- c(coef[grepl(paste0("^",contvar1_char,"$"),model_names_nosymb,fixed=F),"Estimate"],
                      coef[grepl(paste0("^",contvar1_char,"$"),model_names_nosymb,fixed=F),"Estimate"] + 
-                       coef[grepl(paste0(contvar1_char,catvar2_char),model_names_nosymb,fixed=T),"Estimate"])
+                       coef[grepl(paste0(contvar1_char,catvar2_char),model_names_nosymb,fixed=F),"Estimate"])
             reflvl_var <- (coef[grepl(paste0("^",contvar1_char,"$"),model_names_nosymb,fixed=F),"Std. Error"])^2
-            othlvl_var <- reflvl_var + (coef[grepl(paste0(contvar1_char,catvar2_char),model_names_nosymb,fixed=T),"Std. Error"])^2 +
-              2 * vcovmatrix[grepl(paste0("^",contvar1_char,"$"),model_names_nosymb,fixed=F),grepl(paste0(contvar1_char,catvar2_char),model_names_nosymb,fixed=T)]
+            othlvl_var <- reflvl_var + (coef[grepl(paste0(contvar1_char,catvar2_char),model_names_nosymb,fixed=F),"Std. Error"])^2 +
+              2 * vcovmatrix[grepl(paste0("^",contvar1_char,"$"),model_names_nosymb,fixed=F),grepl(paste0(contvar1_char,catvar2_char),model_names_nosymb,fixed=F)]
             var <- c(reflvl_var,othlvl_var)
             out <- cbind.data.frame(est,se=sqrt(var))
             out$level <- unlist(model$xlevels)
